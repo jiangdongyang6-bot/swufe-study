@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10243f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="西财冲刺">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="西南财经大学科技金融考研73天学习与单词默写工具">
+  <title>西财科技金融 73天冲刺</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310243f'/%3E%3Cpath d='M15 18h34v7H15zm0 11h22v7H15zm0 11h28v7H15z' fill='%23fff'/%3E%3Ccircle cx='47' cy='43' r='9' fill='%23ff6b4a'/%3E%3Cpath d='m43 43 3 3 5-7' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">73</div>
+        <div>
+          <strong>西财科技金融</strong>
+          <span>目标 340+</span>
+        </div>
+      </div>
+
+      <div class="overall-card">
+        <div class="overall-head"><span>总进度</span><strong id="overall-percent">0%</strong></div>
+        <div class="progress-track"><span id="overall-bar"></span></div>
+        <p id="overall-detail">0 / 73 天完成</p>
+      </div>
+
+      <div class="day-search-wrap">
+        <label for="day-search">查找日期或天数</label>
+        <input id="day-search" type="search" placeholder="例如 12 或 10月18日" autocomplete="off">
+      </div>
+
+      <nav class="day-list" id="day-list" aria-label="73天学习日历"></nav>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <button class="icon-button mobile-only" id="menu-button" type="button" aria-label="打开日期列表" aria-expanded="false">☰</button>
+        <div class="day-nav">
+          <button class="nav-button" id="prev-day" type="button">上一天</button>
+          <button class="today-button" id="today-button" type="button">定位今天</button>
+          <button class="nav-button" id="next-day" type="button">下一天</button>
+        </div>
+        <button class="reset-button" id="reset-button" type="button">重置本日</button>
+      </header>
+
+      <main class="content">
+        <section class="day-hero">
+          <div>
+            <div class="eyebrow" id="phase-label">第一轮 · 补基础</div>
+            <h1 id="day-title">第01天</h1>
+            <p id="day-meta">10月07日 · 周三 · 计划10小时</p>
+          </div>
+          <div class="day-score" aria-label="今日完成度">
+            <strong id="day-percent">0%</strong>
+            <span>今日完成</span>
+          </div>
+        </section>
+
+        <nav class="tabs" role="tablist" aria-label="学习功能">
+          <button class="tab is-active" type="button" role="tab" aria-selected="true" data-view="plan">今日任务</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-view="dictation">单词学习</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-view="english">英语训练</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-view="mistakes">错词本 <span id="mistake-badge">0</span></button>
+        </nav>
+
+        <section class="view is-active" id="plan-view" data-view-panel="plan">
+          <div class="subject-grid" id="subject-grid"></div>
+          <div class="lower-grid">
+            <article class="sentence-card">
+              <div class="section-heading"><span>阅读输入（可选）</span><small id="sentence-focus"></small></div>
+              <p class="sentence-en" id="sentence-en"></p>
+              <button class="reveal-inline" id="sentence-reveal" type="button">显示译文与练习</button>
+              <p class="sentence-zh is-hidden" id="sentence-zh"></p>
+              <ul class="reading-questions is-hidden" id="sentence-questions"></ul>
+            </article>
+            <article class="review-card">
+              <div class="section-heading"><span>晚间复盘</span><small>自动保存</small></div>
+              <label>今天最大的失分原因<textarea id="review-loss" rows="3" placeholder="写下最关键的一条"></textarea></label>
+              <label>明天开始后先处理<textarea id="review-next" rows="2" placeholder="写下第一件要做的事"></textarea></label>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="dictation-view" data-view-panel="dictation">
+          <div class="dictation-toolbar">
+            <div>
+              <h2>单词学习</h2>
+              <p id="vocab-note"></p>
+            </div>
+            <div class="mode-switch" role="group" aria-label="单词学习模式">
+              <button class="is-active" type="button" data-mode="learn">快速认词</button>
+              <button type="button" data-mode="zh-en">中文写英文</button>
+              <button type="button" data-mode="en-zh">英文认词</button>
+            </div>
+          </div>
+
+          <div class="word-summary">
+            <span><b id="word-index">1</b> / <span id="word-total">75</span></span>
+            <span class="known-dot"><span id="known-label">会</span> <b id="known-count">0</b></span>
+            <span class="unknown-dot"><span id="unknown-label">不会</span> <b id="unknown-count">0</b></span>
+          </div>
+          <div class="word-progress"><span id="word-progress-bar"></span></div>
+
+          <article class="flashcard" id="flashcard">
+            <div class="card-kicker" id="card-kicker">根据中文写英文</div>
+            <div class="card-prompt" id="card-prompt"></div>
+            <label class="answer-label" id="answer-label">你的答案
+              <input id="word-answer" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="输入英文单词">
+            </label>
+            <div class="answer-result is-hidden" id="answer-result" aria-live="polite"></div>
+            <div class="primary-actions">
+              <button class="primary-button" id="check-answer" type="button">检查</button>
+              <button class="secondary-button" id="reveal-answer" type="button">不会，显示答案</button>
+            </div>
+            <div class="rating-actions is-hidden" id="rating-actions">
+              <button class="unknown-button" id="mark-unknown" type="button">还不会</button>
+              <button class="known-button" id="mark-known" type="button">会了，下一词</button>
+            </div>
+          </article>
+
+          <div class="card-footer-actions">
+            <button type="button" id="previous-word">上一词</button>
+            <button type="button" id="shuffle-words">打乱顺序</button>
+            <button type="button" id="next-word">跳过</button>
+          </div>
+          <p class="keyboard-tip" id="keyboard-tip">键盘：Enter 检查/下一词，空格显示答案</p>
+        </section>
+
+        <section class="view" id="english-view" data-view-panel="english">
+          <div class="english-training-head">
+            <div><h2>今日英语速成</h2><p>必做：5个句子写会、真题完成、作文动笔。</p></div>
+            <div class="english-completion" id="english-completion">0 / 3 完成</div>
+          </div>
+
+          <article class="training-card sentence-drill-card">
+            <div class="training-card-head">
+              <div><span class="training-label">01 · 句子写会</span><h3>看中文，完整写出英文</h3></div>
+              <button class="training-check" type="button" data-english-check="sentences" aria-label="标记句子完成">✓</button>
+            </div>
+            <div class="sentence-drill-meta"><strong><span id="sentence-drill-index">1</span> / 5</strong><span>写错就看答案，再默写一遍</span></div>
+            <p class="sentence-drill-prompt" id="sentence-drill-prompt"></p>
+            <label class="sentence-answer-label">你的英文
+              <textarea id="sentence-drill-answer" rows="3" autocomplete="off" spellcheck="false" placeholder="不要照抄，凭记忆写完整句子"></textarea>
+            </label>
+            <div class="sentence-result is-hidden" id="sentence-drill-result" aria-live="polite"></div>
+            <div class="sentence-actions">
+              <button class="primary-button" id="sentence-check" type="button">检查</button>
+              <button class="secondary-button" id="sentence-show" type="button">显示答案</button>
+              <button class="known-button is-hidden" id="sentence-next" type="button">写会了，下一句</button>
+            </div>
+          </article>
+
+          <article class="training-card reading-training">
+            <div class="training-card-head">
+              <div><span class="training-label">可选 · 有余力再精读</span><h3 id="training-reading-title"></h3></div>
+              <span class="optional-badge">不计入必做</span>
+            </div>
+            <p class="long-reading" id="training-reading-en"></p>
+            <button class="reveal-inline" id="training-reading-reveal" type="button">显示译文与问题</button>
+            <div class="training-reveal is-hidden" id="training-reading-answer">
+              <p id="training-reading-zh"></p>
+              <ol id="training-reading-questions"></ol>
+            </div>
+          </article>
+
+          <article class="training-card paper-training">
+            <div class="training-card-head">
+              <div><span class="training-label">02 · 历年真题</span><h3 id="paper-label"></h3></div>
+              <button class="training-check" type="button" data-english-check="paper" aria-label="标记真题完成">✓</button>
+            </div>
+            <div class="paper-meta"><span id="paper-duration"></span><span>英语一</span></div>
+            <p id="paper-task"></p>
+            <p class="acceptance"><strong>复盘：</strong><span id="paper-review"></span></p>
+            <a class="paper-link" id="paper-link" href="https://chenxuqiao.com/lab/kaoyan-english/exam-papers.html" target="_blank" rel="noopener noreferrer">打开2010—2025真题练习入口</a>
+          </article>
+
+          <article class="training-card writing-training">
+            <div class="training-card-head">
+              <div><span class="training-label">03 · 作文动笔</span><h3 id="writing-type"></h3></div>
+              <button class="training-check" type="button" data-english-check="writing" aria-label="标记写作完成">✓</button>
+            </div>
+            <div class="paper-meta"><span id="writing-target"></span></div>
+            <p id="writing-prompt"></p>
+            <p class="acceptance"><strong>提纲：</strong><span id="writing-outline"></span></p>
+            <label class="writing-label">先自己写，再看范文
+              <textarea id="writing-draft" rows="8" placeholder="在这里完成今天的作文，内容会自动保存"></textarea>
+            </label>
+            <button class="reveal-inline" id="writing-reveal" type="button">完成后查看参考范文</button>
+            <pre class="sample-essay is-hidden" id="writing-sample"></pre>
+          </article>
+        </section>
+
+        <section class="view" id="mistakes-view" data-view-panel="mistakes">
+          <div class="mistakes-head">
+            <div><h2>错词本</h2><p>所有标记为“不会”的单词都会留在这里。</p></div>
+            <button class="primary-button" id="review-mistakes" type="button">开始复习错词</button>
+          </div>
+          <div class="mistake-list" id="mistake-list"></div>
+          <div class="empty-state is-hidden" id="mistake-empty">
+            <strong>暂时没有错词</strong>
+            <span>默写时点击“还不会”，这里就会自动收集。</span>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
